@@ -4,6 +4,7 @@ import { authorize } from "../middleware/role.middleware.js";
 import {
   listNotices,
   getUrgentStories,
+  createStory,
   getNotice,
   getRelatedNotices,
   toggleBookmark,
@@ -18,7 +19,9 @@ router.use(authenticate);
 
 // Specific paths must precede parameter routes
 router.get("/", listNotices);
+router.get("/stories", getUrgentStories);
 router.get("/stories/urgent", getUrgentStories);
+router.post("/stories", authorize("ADMIN", "CLUB_LEADER"), createStory);
 router.get("/:id/related", getRelatedNotices);
 router.patch("/:id/bookmark", toggleBookmark);
 router.patch("/:id/reminder", toggleReminder);

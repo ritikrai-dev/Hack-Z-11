@@ -92,6 +92,42 @@ export async function getUrgentStories(req, res, next) {
   }
 }
 
+export async function createStory(req, res, next) {
+  try {
+    const role = req.user?.role;
+    const authorClub = req.user?.assignedClub || req.body.club || req.body.dept || "Campus Club";
+    const newStory = {
+      id: `story_${Date.now()}`,
+      title: req.body.title || `${authorClub} Story`,
+      dept: authorClub,
+      club: authorClub,
+      ringType: "club",
+      badge: req.body.badge || "CLUB",
+      gradient: ["#8B5CF6", "#EC4899"],
+      avatar: req.body.mediaUrl || "https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=400&q=80",
+      mediaUrl: req.body.mediaUrl || "https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=400&q=80",
+      mediaType: req.body.mediaType || "image",
+      expiresIn: "Expires in 24 hrs",
+      summary: req.body.caption || req.body.summary || req.body.title || "Club Story Update",
+      caption: req.body.caption || req.body.summary || "",
+      views: 12,
+      viewers: [
+        { name: "Aarav Patel", studentId: "2024CS099", time: "10m ago" },
+        { name: "Ritik Sharma", studentId: "2023CS042", time: "25m ago" },
+        { name: "Sneha Sen", studentId: "2023CS105", time: "1h ago" },
+        { name: "Devansh Rao", studentId: "2024IT021", time: "2h ago" }
+      ],
+      createdAt: new Date().toISOString(),
+      authorId: req.user?.sub || req.user?.studentId
+    };
+
+    mockDatabase.urgentStories.unshift(newStory);
+    return success(res, "Story posted successfully", { story: newStory }, 201);
+  } catch (e) {
+    next(e);
+  }
+}
+
 
 export async function getNotice(req, res, next) {
   try {

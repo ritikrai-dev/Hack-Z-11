@@ -5,7 +5,8 @@ import { mockDatabase } from "../services/mockData.js";
 export async function loginController(req, res, next) {
   try {
     const id = req.body.userId || req.body.collegeId || req.body.studentId || req.body.adminId;
-    const { password, expectedPortal, expectedRole } = req.body;
+    const { password, expectedPortal } = req.body;
+    const expectedRole = req.body.expectedRole || req.body.role;
 
     if (!id || !password) {
       return failure(res, "User ID / College ID and password are required", 400);
@@ -20,6 +21,10 @@ export async function loginController(req, res, next) {
 
     if (expectedRole === "TEACHER" && data.user.role !== "TEACHER") {
       return failure(res, "Invalid role. Please use the Student Login portal.", 403);
+    }
+
+    if (expectedRole === "CLUB_LEADER" && data.user.role !== "CLUB_LEADER") {
+      return failure(res, "Invalid role. Please select your registered role.", 403);
     }
 
     // Enforce portal isolation:

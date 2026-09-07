@@ -39,19 +39,40 @@ router.get("/students", async (req, res) => {
       .eq("role", "STUDENT");
 
     if (!error && supaStudents && supaStudents.length > 0) {
-      let mapped = supaStudents.map(s => ({
-        id: s.id,
-        studentId: s.student_id || s.id,
-        name: s.name,
-        email: s.email,
-        role: s.role,
-        department: s.department_id || "Computer Science",
-        year: s.academic_year || "3rd Year",
-        division: s.division || "A",
-        phone: s.phone || "+91 98765 43210",
-        avatar: s.avatar_url || `https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80`,
-        isActive: s.is_active !== false
-      }));
+      const deptMap = {
+        dept_cs: "Computer Science",
+        dept_ece: "Electronics",
+        dept_me: "Mechanical",
+        dept_it: "Information Tech",
+        dept_civil: "Civil Engineering"
+      };
+      const yearMap = {
+        "1st": "1st Year",
+        "2nd": "2nd Year",
+        "3rd": "3rd Year",
+        "4th": "4th Year"
+      };
+
+      let mapped = supaStudents.map(s => {
+        const rawDept = s.department_id || "";
+        const friendlyDept = deptMap[rawDept] || rawDept || "Computer Science";
+        const rawYear = s.academic_year || "";
+        const friendlyYear = yearMap[rawYear] || (rawYear ? `${rawYear} Year` : "3rd Year");
+
+        return {
+          id: s.id,
+          studentId: s.student_id || s.id,
+          name: s.name,
+          email: s.email,
+          role: s.role,
+          department: friendlyDept,
+          year: friendlyYear,
+          division: s.division || "A",
+          phone: s.phone || "+91 98765 43210",
+          avatar: s.avatar_url || `https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80`,
+          isActive: s.is_active !== false
+        };
+      });
 
       if (department && department !== "All") {
         mapped = mapped.filter(s => s.department?.toLowerCase().includes(department.toLowerCase()));
