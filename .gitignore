@@ -1,0 +1,124 @@
+# ==========================================
+# 1. Node.js & Dependency Management
+# ==========================================
+node_modules/
+**/node_modules/
+.pnp
+.pnp.js
+.yarn/
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+npm-debug.log*
+pnpm-debug.log*
+package-lock.json.bak
+
+# ==========================================
+# 2. Environment Variables & Secrets
+# ==========================================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env*.local
+**/.env
+**/.env.*.local
+*.pem
+*.key
+*.cert
+
+# ==========================================
+# 3. Build Outputs & Artifacts
+# ==========================================
+dist/
+**/dist/
+build/
+**/build/
+out/
+**/out/
+bin/
+obj/
+*.tgz
+*.zip
+
+# ==========================================
+# 4. Mobile Development (React Native / Expo)
+# ==========================================
+# Expo & Web builds
+.expo/
+.expo-shared/
+web-build/
+**/web-build/
+
+# Android builds
+android/app/build/
+android/.gradle/
+android/app/debug/
+android/app/release/
+**/android/app/build/
+**/android/.gradle/
+*.apk
+*.aab
+*.keystore
+
+# iOS builds
+ios/Pods/
+ios/build/
+ios/DerivedData/
+**/ios/Pods/
+**/ios/build/
+*.xcworkspace
+!ios/Pods/Manifest.lock
+
+# Metro & Bundler Caches
+.metro-health-check*
+*.metro-health-check
+.expo-source-map
+
+# ==========================================
+# 5. Frontend Admin Portal (Vite / React)
+# ==========================================
+.vite/
+**/.vite/
+.output/
+.nuxt/
+.next/
+
+# ==========================================
+# 6. Database, Logs & Storage (Supabase / MongoDB)
+# ==========================================
+*.log
+logs/
+**/logs/
+*.sqlite
+*.sqlite3
+*.db
+supabase/.temp/
+**/supabase/.temp/
+
+# ==========================================
+# 7. Testing & Coverage
+# ==========================================
+coverage/
+**/coverage/
+.nyc_output/
+*.lcov
+
+# ==========================================
+# 8. IDEs, Editors & OS Files
+# ==========================================
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
