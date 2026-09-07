@@ -4,7 +4,7 @@ import { mockDatabase } from "../services/mockData.js";
 
 export async function loginController(req, res, next) {
   try {
-    const id = req.body.userId || req.body.collegeId || req.body.studentId || req.body.adminId;
+    const id = req.body.email || req.body.userId || req.body.collegeId || req.body.studentId || req.body.adminId;
     const { password, expectedPortal } = req.body;
     const expectedRole = req.body.expectedRole || req.body.role;
 

@@ -139,6 +139,9 @@ export const adminApi = {
   createNotice: (data) => adminApiRequest("/notices", { method: "POST", body: JSON.stringify(data) }),
   getEvents: () => adminApiRequest("/organizer/events"),
   boostEvent: (id) => adminApiRequest(`/organizer/events/${id}/boost`, { method: "PATCH" }),
-  createEvent: (data) => adminApiRequest("/organizer/events", { method: "POST", body: JSON.stringify(data) })
+  createEvent: (data) => adminApiRequest("/organizer/events", { method: "POST", body: JSON.stringify(data) }),
+
+  // Defaulters Oversight
+  getDefaulters: (dept = "") => adminApiRequest(`/defaulters/admin/all?department=${encodeURIComponent(dept)}`)
 };
 

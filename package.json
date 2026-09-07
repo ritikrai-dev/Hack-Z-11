@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "@supabase/server": "^1.5.3"
+    "@supabase/server": "^1.5.3",
+    "socket.io-client": "^4.8.3"
   }
 }

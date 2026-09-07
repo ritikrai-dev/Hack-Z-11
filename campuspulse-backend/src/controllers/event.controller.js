@@ -1,6 +1,7 @@
 import * as XLSX from "xlsx";
 import { success, failure } from "../utils/response.js";
 import { mockDatabase } from "../services/mockData.js";
+import { sendNotificationAndSync } from "../services/notificationService.js";
 
 // Ensure seed events have scopes and registrations
 function ensureEventRegistrations(event) {
@@ -335,6 +336,29 @@ export async function create(req, res, next) {
         trend: [1]
       });
     }
+
+    // Real-Time Sync & Notification Dispatch
+    sendNotificationAndSync({
+      sender: {
+        role: req.user?.role || "ORGANIZER",
+        name: newEvent.organizerClub
+      },
+      target: {
+        type: "ALL"
+      },
+      payload: {
+        type: "event:created",
+        title: `🎉 New Event: ${newEvent.title}`,
+        message: `${newEvent.organizerClub} announced: ${newEvent.title} on ${newEvent.date} at ${newEvent.location}. RSVP now!`,
+        data: newEvent,
+        metadata: {
+          eventId: newEvent.id,
+          scope: newEvent.scope,
+          category: newEvent.category,
+          date: newEvent.date
+        }
+      }
+    }).catch((err) => console.warn("Event notification error:", err?.message));
 
     return success(res, "Event created successfully", { event: newEvent }, 201);
   } catch (e) {

@@ -13,6 +13,9 @@ import scheduleRoutes from "./routes/schedule.routes.js";
 import aiRoutes from "./routes/ai.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
 import fileRoutes from "./routes/file.routes.js";
+import defaulterRoutes from "./routes/defaulter.routes.js";
+import examRoutes from "./routes/exam.routes.js";
+import notificationRoutes from "./routes/notification.routes.js";
 import { notFound, errorHandler } from "./middleware/error.middleware.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -90,6 +93,15 @@ app.use(`${env.apiPrefix}/admin`, adminRoutes);
 
 app.use("/files", fileRoutes);
 app.use(`${env.apiPrefix}/files`, fileRoutes);
+
+app.use("/defaulters", defaulterRoutes);
+app.use(`${env.apiPrefix}/defaulters`, defaulterRoutes);
+
+app.use("/exams", examRoutes);
+app.use(`${env.apiPrefix}/exams`, examRoutes);
+
+app.use("/notifications", notificationRoutes);
+app.use(`${env.apiPrefix}/notifications`, notificationRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

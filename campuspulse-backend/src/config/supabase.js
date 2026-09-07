@@ -1,11 +1,13 @@
 import { createClient } from "@supabase/supabase-js";
 import { env } from "./env.js";
 
-if (!env.supabase.url || !env.supabase.secretKey) {
-  console.warn("⚠️ Supabase URL or Secret Key not provided.");
+const activeKey = env.supabase.key || env.supabase.publishableKey || env.supabase.secretKey;
+
+if (!env.supabase.url || !activeKey) {
+  console.warn("⚠️ Supabase URL or API Key not provided.");
 }
 
-export const supabase = createClient(env.supabase.url, env.supabase.secretKey, {
+export const supabase = createClient(env.supabase.url, activeKey, {
   auth: {
     persistSession: false,
     autoRefreshToken: false
@@ -14,11 +16,19 @@ export const supabase = createClient(env.supabase.url, env.supabase.secretKey, {
 
 export async function testSupabase() {
   try {
-    // Quick ping to check Supabase project health
-    const res = await fetch(`${env.supabase.url}/rest/v1/`, {
+    // Ping Supabase table endpoint to verify connection & schema access
+    const { data, error } = await supabase.from("users").select("id").limit(1);
+
+    if (!error) {
+      console.log(`⚡ Supabase connected successfully: ${env.supabase.url}`);
+      return true;
+    }
+
+    // Direct REST API verification fallback
+    const res = await fetch(`${env.supabase.url}/rest/v1/users?limit=1`, {
       headers: {
-        apikey: env.supabase.secretKey,
-        Authorization: `Bearer ${env.supabase.secretKey}`
+        apikey: activeKey,
+        Authorization: `Bearer ${activeKey}`
       }
     });
 

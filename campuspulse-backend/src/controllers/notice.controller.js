@@ -1,6 +1,7 @@
 import Notice from "../models/mongodb/Notice.js";
 import { success, failure } from "../utils/response.js";
 import { mockDatabase } from "../services/mockData.js";
+import { sendNotificationAndSync } from "../services/notificationService.js";
 
 
 export async function listNotices(req, res, next) {
@@ -122,6 +123,28 @@ export async function createStory(req, res, next) {
     };
 
     mockDatabase.urgentStories.unshift(newStory);
+
+    // Real-Time Sync & Notification Dispatch
+    sendNotificationAndSync({
+      sender: {
+        role: role || "CLUB_LEADER",
+        name: req.user?.name || authorClub
+      },
+      target: {
+        type: "ALL"
+      },
+      payload: {
+        type: "story:created",
+        title: `New Campus Story from ${authorClub}`,
+        message: newStory.caption || newStory.summary || "Tap to view the new 24h story update.",
+        data: newStory,
+        metadata: {
+          storyId: newStory.id,
+          club: authorClub
+        }
+      }
+    }).catch((err) => console.warn("Story notification error:", err?.message));
+
     return success(res, "Story posted successfully", { story: newStory }, 201);
   } catch (e) {
     next(e);
@@ -265,8 +288,33 @@ export async function createNotice(req, res, next) {
     }
 
     mockDatabase.notices.unshift(newNotice);
-    return success(res, "Notice created successfully", { notice: newNotice }, 201);
 
+    // Real-Time Sync & Notification Dispatch
+    const isDeptSpecific = authorDept && authorDept !== "Campus Administration" && authorDept !== "All";
+    sendNotificationAndSync({
+      sender: {
+        role: role || "FACULTY",
+        name: req.user?.name || "Campus Administration"
+      },
+      target: {
+        type: isDeptSpecific ? "DEPARTMENT" : "ALL",
+        department: isDeptSpecific ? authorDept : null
+      },
+      payload: {
+        type: "notice:created",
+        title: `${newNotice.urgency === "high" ? "🚨 " : "📢 "}${newNotice.title}`,
+        message: newNotice.aiSummary || newNotice.content?.slice(0, 120) || "A new official notice has been published.",
+        data: newNotice,
+        metadata: {
+          noticeId: newNotice.id,
+          category: newNotice.category,
+          urgency: newNotice.urgency,
+          department: authorDept
+        }
+      }
+    }).catch((err) => console.warn("Notice notification error:", err?.message));
+
+    return success(res, "Notice created successfully", { notice: newNotice }, 201);
   } catch (e) {
     next(e);
   }

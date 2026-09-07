@@ -19,6 +19,7 @@ export const mockDatabase = {
     {
       id: "usr_student_01",
       studentId: "2023CS042",
+      seatNumber: "S2023042",
       name: "Ritik Sharma",
       email: "ritik.sharma@campus.edu",
       role: "STUDENT",
@@ -54,6 +55,26 @@ export const mockDatabase = {
       avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=400&q=80",
       interests: ["Tech & AI"],
       createdAt: "2026-09-01T11:00:00Z"
+    },
+    {
+      id: "usr_student_03",
+      studentId: "2026CS023",
+      seatNumber: "S2026023",
+      name: "Rahul Sharma",
+      email: "rahul.sharma@campus.edu",
+      role: "STUDENT",
+      department: "Computer Science & Engineering",
+      year: "3rd Year",
+      semester: "Semester 5",
+      division: "A",
+      phone: "+91 98765 11223",
+      password: "student123",
+      isActive: true,
+      mustChangePassword: false,
+      profileCompleteness: 90,
+      avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80",
+      interests: ["Tech & AI", "Computer Networks"],
+      createdAt: "2026-09-02T10:00:00Z"
     },
     {
       id: "usr_teacher_01",

@@ -5,6 +5,7 @@ import {
   ChevronRight, AlertCircle, BarChart3, Activity, Award, Zap, Building, Check
 } from 'lucide-react';
 import { adminStorage, adminLogin, adminChangePassword, adminLogout, adminGetMe, adminApi } from './api/client';
+import DefaulterImport from './components/DefaulterImport';
 
 export default function App() {
   const [user, setUser] = useState(adminStorage.getUser());
@@ -17,7 +18,7 @@ export default function App() {
   const [authError, setAuthError] = useState('');
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
-  // Active Tab: 'overview' | 'students' | 'teachers' | 'clubs' | 'notices' | 'events'
+  // Active Tab: 'overview' | 'students' | 'teachers' | 'clubs' | 'notices' | 'events' | 'defaulters'
   const [activeTab, setActiveTab] = useState('overview');
 
   // Live Data States
@@ -27,6 +28,7 @@ export default function App() {
   const [clubLeaders, setClubLeaders] = useState([]);
   const [notices, setNotices] = useState([]);
   const [events, setEvents] = useState([]);
+  const [defaulters, setDefaulters] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -77,6 +79,9 @@ export default function App() {
       } else if (activeTab === 'events') {
         const res = await adminApi.getEvents();
         if (res.data) setEvents(res.data.events || []);
+      } else if (activeTab === 'defaulters') {
+        const res = await adminApi.getDefaulters();
+        if (res.data) setDefaulters(res.data.defaulters || []);
       }
     } catch (err) {
       console.error(err);
@@ -396,6 +401,7 @@ export default function App() {
               { id: 'clubs', label: 'Club Leaders & Orgs', icon: Award },
               { id: 'notices', label: 'Notices & Broadcasts', icon: Bell },
               { id: 'events', label: 'Events & RSVPs', icon: Calendar },
+              { id: 'defaulters', label: 'Defaulter Oversight', icon: AlertCircle },
             ].map(tab => {
               const Icon = tab.icon;
               const active = activeTab === tab.id;
@@ -863,6 +869,97 @@ export default function App() {
                     </div>
                   </div>
                 ))}
+              </div>
+            </div>
+          )}
+
+          {/* ================= VIEW 7: DEFAULTERS OVERSIGHT ================= */}
+          {activeTab === 'defaulters' && (
+            <div className="space-y-5">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <h2 className="text-xl font-black text-white">Defaulter & Shortage Oversight</h2>
+                  <p className="text-xs text-slate-400">Review official faculty-published subject shortage lists and detentions</p>
+                </div>
+                <button
+                  onClick={loadTabData}
+                  className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold flex items-center gap-2 border border-slate-700 transition self-start"
+                >
+                  <RefreshCw className="w-3.5 h-3.5" /> Refresh Records
+                </button>
+              </div>
+
+              {/* Metric Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4">
+                  <span className="text-xs text-slate-400">Total Active Defaulters</span>
+                  <div className="text-2xl font-black text-red-400 mt-1">{defaulters.length}</div>
+                  <span className="text-[11px] text-slate-500">Across all academic departments</span>
+                </div>
+                <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4">
+                  <span className="text-xs text-slate-400">Subjects Affected</span>
+                  <div className="text-2xl font-black text-amber-400 mt-1">
+                    {new Set(defaulters.map(d => d.subject)).size}
+                  </div>
+                  <span className="text-[11px] text-slate-500">Unique class curricula</span>
+                </div>
+                <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4">
+                  <span className="text-xs text-slate-400">Active Faculty Submissions</span>
+                  <div className="text-2xl font-black text-blue-400 mt-1">
+                    {new Set(defaulters.map(d => d.teacherId)).size}
+                  </div>
+                  <span className="text-[11px] text-slate-500">Subject instructors</span>
+                </div>
+              </div>
+
+              {/* Batch Import & Verification Module */}
+              <DefaulterImport onImportSuccess={loadTabData} />
+
+              {/* Defaulter Records Table */}
+              <div className="bg-slate-900/70 border border-slate-800/80 rounded-2xl overflow-hidden shadow-xl">
+                <div className="p-4 border-b border-slate-800 flex items-center justify-between">
+                  <h3 className="font-bold text-white text-sm">Official Faculty-Published Defaulter Register</h3>
+                  <span className="text-xs text-slate-400">{defaulters.length} Active Records</span>
+                </div>
+
+                {loading ? (
+                  <div className="p-12 text-center text-slate-500 text-xs">Loading official records...</div>
+                ) : defaulters.length === 0 ? (
+                  <div className="p-12 text-center text-slate-500 text-xs">No active student defaulters recorded.</div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-xs">
+                      <thead className="bg-slate-950/60 text-slate-400 uppercase tracking-wider font-bold text-[10px] border-b border-slate-800/80">
+                        <tr>
+                          <th className="py-3 px-4">Seat Number (PRN)</th>
+                          <th className="py-3 px-4">Student Name</th>
+                          <th className="py-3 px-4">Subject</th>
+                          <th className="py-3 px-4">Attendance %</th>
+                          <th className="py-3 px-4">Reporting Faculty</th>
+                          <th className="py-3 px-4">Notice Title</th>
+                          <th className="py-3 px-4">Status</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-800/60 text-slate-300">
+                        {defaulters.map((d) => (
+                          <tr key={d.id} className="hover:bg-slate-800/30 transition">
+                            <td className="py-3 px-4 font-mono font-bold text-red-400">#{d.seatNumber || d.studentId}</td>
+                            <td className="py-3 px-4 font-semibold text-white">{d.studentName}</td>
+                            <td className="py-3 px-4 text-blue-400 font-medium">{d.subject}</td>
+                            <td className="py-3 px-4 font-bold text-amber-400">{d.attendancePercentage || 65}%</td>
+                            <td className="py-3 px-4 text-slate-400">{d.teacherName}</td>
+                            <td className="py-3 px-4 text-slate-400">{d.noticeTitle}</td>
+                            <td className="py-3 px-4">
+                              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-500/20 text-red-400 border border-red-500/30">
+                                ⚠️ ACTIVE
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
               </div>
             </div>
           )}

@@ -34,6 +34,10 @@ async function start() {
       console.log(`🩺 Health check available at http://localhost:${env.port}/health`);
     });
 
+    // Initialize Socket.io real-time layer
+    const { initSocket } = await import("./services/socket.service.js");
+    initSocket(server);
+
     server.on("error", (err) => {
       if (err.code === "EADDRINUSE") {
         console.error(`Port ${env.port} is already in use. Please check running processes.`);
