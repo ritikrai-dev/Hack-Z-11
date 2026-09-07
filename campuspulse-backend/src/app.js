@@ -63,15 +63,32 @@ app.get("/", baseInfoHandler);
 app.get("/api", baseInfoHandler);
 app.get(`${env.apiPrefix}`, baseInfoHandler);
 
+// Mount routes on both root and /api/v1
 app.use("/auth", authRoutes);
 app.use(`${env.apiPrefix}/auth`, authRoutes);
+
+app.use("/user", userRoutes);
 app.use(`${env.apiPrefix}/user`, userRoutes);
+
+app.use("/notices", noticeRoutes);
 app.use(`${env.apiPrefix}/notices`, noticeRoutes);
+
+app.use("/events", eventRoutes);
 app.use(`${env.apiPrefix}/events`, eventRoutes);
+
+app.use("/organizer", organizerRoutes);
 app.use(`${env.apiPrefix}/organizer`, organizerRoutes);
+
+app.use("/schedule", scheduleRoutes);
 app.use(`${env.apiPrefix}/schedule`, scheduleRoutes);
+
+app.use("/ai", aiRoutes);
 app.use(`${env.apiPrefix}/ai`, aiRoutes);
+
+app.use("/admin", adminRoutes);
 app.use(`${env.apiPrefix}/admin`, adminRoutes);
+
+app.use("/files", fileRoutes);
 app.use(`${env.apiPrefix}/files`, fileRoutes);
 
 app.use(notFound);
