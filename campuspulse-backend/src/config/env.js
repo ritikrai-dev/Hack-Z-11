@@ -13,10 +13,10 @@ export const env = {
   nodeEnv: process.env.NODE_ENV || "development",
   apiPrefix: process.env.API_PREFIX || "/api/v1",
   supabase: {
-    url: process.env.SUPABASE_URL || "https://mxdyulpunsogjfsaflao.supabase.co",
-    publishableKey: process.env.SUPABASE_PUBLISHABLE_KEY || "sb_publishable_7vXZ2yLLWpbnmIVwJ7-nXw_OdrjlmUa",
-    secretKey: process.env.SUPABASE_SECRET_KEY || "sb_secret_5I106kzUs4w0AeFBqceKRQ_4dr3l8zi",
-    jwksUrl: process.env.SUPABASE_JWKS_URL || "https://mxdyulpunsogjfsaflao.supabase.co/auth/v1/.well-known/jwks.json"
+    url: process.env.SUPABASE_URL ,
+    publishableKey: process.env.SUPABASE_PUBLISHABLE_KEY ,
+    secretKey: process.env.SUPABASE_SECRET_KEY,
+    jwksUrl: process.env.SUPABASE_JWKS_URL 
   },
   mongoUri: process.env.MONGODB_URI,
   jwtSecret: process.env.JWT_SECRET || "campuspulse_super_secret_jwt_key_2026_secured",
