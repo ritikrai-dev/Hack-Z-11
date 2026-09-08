@@ -253,7 +253,7 @@ export default function App() {
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-500 shadow-xl shadow-blue-500/20 text-white font-black text-2xl mb-4 border border-blue-400/20">
               <Shield className="w-8 h-8" />
             </div>
-            <h1 className="text-2xl font-black tracking-tight text-white">CampusPulse Administrator</h1>
+            <h1 className="text-2xl font-black tracking-tight text-white">UniSync Administrator</h1>
             <p className="text-slate-400 text-sm mt-1">Central Administrative & Credential Command Portal</p>
             <div className="mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs font-semibold text-blue-400">
               <Lock className="w-3.5 h-3.5" /> Restricted Access — Authorized Personnel Only
@@ -353,7 +353,7 @@ export default function App() {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-bold text-white tracking-tight">CampusPulse</span>
+              <span className="font-bold text-white tracking-tight">UniSync</span>
               <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30 uppercase">
                 Admin Console
               </span>
